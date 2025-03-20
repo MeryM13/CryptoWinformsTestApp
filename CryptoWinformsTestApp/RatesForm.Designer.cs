@@ -32,7 +32,6 @@
             RatesDGrid = new DataGridView();
             SymbolCmb = new ComboBox();
             label1 = new Label();
-            symbolTxt = new TextBox();
             UpdateAvailableSymbolsBtn = new Button();
             RatesTimer = new System.Windows.Forms.Timer(components);
             ((System.ComponentModel.ISupportInitialize)RatesDGrid).BeginInit();
@@ -49,7 +48,7 @@
             // SymbolCmb
             // 
             SymbolCmb.FormattingEnabled = true;
-            SymbolCmb.Location = new Point(146, 74);
+            SymbolCmb.Location = new Point(143, 38);
             SymbolCmb.Name = "SymbolCmb";
             SymbolCmb.Size = new Size(121, 23);
             SymbolCmb.TabIndex = 1;
@@ -58,22 +57,15 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(41, 77);
+            label1.Location = new Point(38, 41);
             label1.Name = "label1";
             label1.Size = new Size(90, 15);
             label1.TabIndex = 2;
             label1.Text = "Выберите пару";
             // 
-            // symbolTxt
-            // 
-            symbolTxt.Location = new Point(146, 45);
-            symbolTxt.Name = "symbolTxt";
-            symbolTxt.Size = new Size(100, 23);
-            symbolTxt.TabIndex = 3;
-            // 
             // UpdateAvailableSymbolsBtn
             // 
-            UpdateAvailableSymbolsBtn.Location = new Point(308, 59);
+            UpdateAvailableSymbolsBtn.Location = new Point(300, 38);
             UpdateAvailableSymbolsBtn.Name = "UpdateAvailableSymbolsBtn";
             UpdateAvailableSymbolsBtn.Size = new Size(75, 23);
             UpdateAvailableSymbolsBtn.TabIndex = 4;
@@ -83,6 +75,7 @@
             // 
             // RatesTimer
             // 
+            RatesTimer.Enabled = true;
             RatesTimer.Interval = 5000;
             RatesTimer.Tick += RatesTimer_Tick;
             // 
@@ -92,7 +85,6 @@
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
             Controls.Add(UpdateAvailableSymbolsBtn);
-            Controls.Add(symbolTxt);
             Controls.Add(label1);
             Controls.Add(SymbolCmb);
             Controls.Add(RatesDGrid);
@@ -108,7 +100,6 @@
         private DataGridView RatesDGrid;
         private ComboBox SymbolCmb;
         private Label label1;
-        private TextBox symbolTxt;
         private Button UpdateAvailableSymbolsBtn;
         private System.Windows.Forms.Timer RatesTimer;
     }

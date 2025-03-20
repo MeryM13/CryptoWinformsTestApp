@@ -11,22 +11,43 @@ namespace CryptoWinformsTestApp
             InitializeComponent();
         }
 
-        // public List<string> AvailableSymbols { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public string Symbol
         {
-            get => symbolTxt.Text;
+            get => SymbolCmb.SelectedItem.ToString();
             set
             {
-                symbolTxt.Text = value;
-                //SymbolCmb.SelectedItem = value; 
+                try
+                {
+                    SymbolCmb.SelectedItem = value;
+                }
+                catch { }
             }
         }
-        public List<CryptoData> Rates { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public System.Windows.Forms.Timer RatesUpdateTimer { get => RatesTimer; set => RatesTimer = value; }
 
-        public event Action UpdateAvailableSymbols;
-        public event Action OnSymbolChanged;
-        public event Action UpdateRates;
+        public List<string> AvailableSymbols
+        {
+            set
+            {
+                SymbolCmb.Items.Clear();
+                foreach (string symbol in value)
+                {
+                    SymbolCmb.Items.Add(symbol);
+                }
+            }
+        }
+
+        public List<CryptoData> Rates
+        {
+            set
+            {
+                RatesDGrid.DataSource = value;
+                RatesDGrid.Refresh();
+            }
+        }
+
+        public event Action SetAvailableSymbols;
+        public event Action ChangeSymbol;
+        public event Action SetRates;
 
         public void ShowError(string ErrorMessage)
         {
@@ -35,17 +56,24 @@ namespace CryptoWinformsTestApp
 
         private void UpdateAvailableSymbolsBtn_Click(object sender, EventArgs e)
         {
-           // UpdateAvailableSymbols();
+            SetAvailableSymbols?.Invoke();
+            SymbolCmb.SelectedIndex = 1;
         }
 
         private void SymbolCmb_SelectedIndexChanged(object sender, EventArgs e)
         {
-           // OnSymbolChanged();
+            ChangeSymbol?.Invoke();
+            SetRates?.Invoke();
         }
 
         private void RatesTimer_Tick(object sender, EventArgs e)
         {
-            UpdateRates();
+            SetRates?.Invoke();
+        }
+
+        public void LoadInitialData()
+        {
+            SetAvailableSymbols?.Invoke();
         }
     }
 }

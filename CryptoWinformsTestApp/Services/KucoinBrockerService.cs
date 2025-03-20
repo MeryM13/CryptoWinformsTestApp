@@ -13,10 +13,16 @@ namespace CryptoWinformsTestApp.Services
         {
             
         }
-        public override async Task<List<string>> GetAvailableSymbols()
+        public override async Task<List<string>> GetAvailableAssets()
         {
             var exchangeInfo = await RestClient.SpotApi.ExchangeData.GetSymbolsAsync();
-            return exchangeInfo.Data.Select(x => x.Name).ToList();
+            if (exchangeInfo.Data != null)
+            {
+                var bases = exchangeInfo.Data.Select(x => x.BaseAsset).ToList();
+                var quotes = exchangeInfo.Data.Select(x => x.QuoteAsset).ToList();
+                return bases.Union(quotes).Distinct().ToList();
+            }
+            return [];
         }
 
         public override void GetSharedClient()

@@ -1,3 +1,7 @@
+using CryptoWinformsTestApp.Interfaces;
+using CryptoWinformsTestApp.Presenters;
+using CryptoWinformsTestApp.Services;
+
 namespace CryptoWinformsTestApp
 {
     internal static class Program
@@ -8,10 +12,19 @@ namespace CryptoWinformsTestApp
         [STAThread]
         static void Main()
         {
+            List<IBrockerService> brockers = 
+                [
+                new BinanceBrockerService(),
+                new BybitBrockerService(),
+                ];
+
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
-            Application.Run(new RatesForm());
+
+            var view = new RatesForm();
+            var presenter = new RatesPresenter(view, brockers);
+            Application.Run(view);
         }
     }
 }

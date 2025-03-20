@@ -13,8 +13,8 @@ namespace CryptoWinformsTestApp.Interfaces
         void OpenConnection();
         bool CoonectionOpen();
         void CloseConnection();
-        void ChangeSymbol(SharedSymbol newSymbol);
+        void ChangeSymbol(string baseAsset, string quoteAsset);
         CryptoData GetRate();
-        Task<List<string>> GetAvailableSymbols();
+        Task<List<string>> GetAvailableAssets();
     }
 }

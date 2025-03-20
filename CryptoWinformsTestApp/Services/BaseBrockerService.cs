@@ -21,7 +21,7 @@ namespace CryptoWinformsTestApp.Services
         public TRestClient RestClient;
 
         bool _connectionOpen;
-        SharedSymbol _sharedSymbol;
+        SharedSymbol _sharedSymbol = new SharedSymbol(TradingMode.Spot, "BTC", "USDT");
         CryptoData CryptoData;
         CancellationTokenSource _cancelTocken = new();
 
@@ -30,7 +30,6 @@ namespace CryptoWinformsTestApp.Services
             SocketClient = socketClient;
             RestClient = restClient;
             GetSharedClient();
-            OpenConnection();
         }
 
         public abstract void GetSharedClient();
@@ -46,14 +45,20 @@ namespace CryptoWinformsTestApp.Services
                     {
                         Brocker = SharedClient.Exchange,
                         Symbol = update.Data.Symbol,
-                        Rate = update.Data.LastPrice ?? -1,
+                        Rate = update.Data.LastPrice ?? 0,
                         AcquiredAt = update.ReceiveTime
                     };
                     Thread.Sleep(1000);
                 }, _cancelTocken.Token);
 
                 if (!result.Success)
-                    throw new Exception($"{result.Error}");
+                    CryptoData = new()
+                    {
+                        Brocker = SharedClient.Exchange,
+                        Symbol = "not found",
+                        Rate = -1,
+                        AcquiredAt = DateTime.MinValue
+                    };
             }
         }
 
@@ -71,17 +76,18 @@ namespace CryptoWinformsTestApp.Services
             return _connectionOpen;
         }
 
-        public void ChangeSymbol(SharedSymbol newSymbol)
+        public void ChangeSymbol(string baseAsset, string quoteAsset)
         {
+            var newSymbol = new SharedSymbol(TradingMode.Spot, baseAsset, quoteAsset);
             if (_sharedSymbol != newSymbol)
             {
                 _sharedSymbol = newSymbol;
+                CloseConnection();
+                OpenConnection();
             }
-            CloseConnection();
-            OpenConnection();
         }
 
-        public abstract Task<List<string>> GetAvailableSymbols();
+        public abstract Task<List<string>> GetAvailableAssets();
 
         public CryptoData GetRate()
         {

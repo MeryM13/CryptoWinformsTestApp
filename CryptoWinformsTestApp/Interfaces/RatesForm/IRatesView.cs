@@ -10,13 +10,14 @@ namespace CryptoWinformsTestApp.Interfaces.RatesForm
 {
     internal interface IRatesView : IView
     {
-        List<CryptoData> Rates { get; set; }
-      //  List<string> AvailableSymbols { get; set; }
-        string Symbol {  get; set; }
-        System.Windows.Forms.Timer RatesUpdateTimer { get; set; }
+        string Symbol { get; set; }
+        List<string> AvailableSymbols { set; }
+        List<CryptoData> Rates { set; }
 
-       // event Action UpdateAvailableSymbols;
-       // event Action OnSymbolChanged;
-        event Action UpdateRates;
+        void LoadInitialData();
+
+        event Action SetAvailableSymbols;
+        event Action ChangeSymbol;
+        event Action SetRates;
     }
 }

@@ -12,16 +12,32 @@ namespace CryptoWinformsTestApp.Models
     {
         public List<IBrockerService> Brockers {get; set; } = new();
         public List<string> AvailableSymbols { get; set; } = new();
-        public string AssetFrom { get; set; } = string.Empty;
-        public string AssetTo { get; set; } = string.Empty;
+        public string AssetFrom { get; set; } = "BTC";
+        public string AssetTo { get; set; } = "USDT";
         public List<CryptoData> Rates { get; set; } = new();
 
-        public void GetData()
+        public async Task<string> ActivateBrockers()
         {
+            string response = "";
+            foreach (var brocker in Brockers)
+            {
+                brocker.OpenConnection();
+            }
+            if (string.IsNullOrEmpty(response))
+                response = "Success";
+            Console.WriteLine(response);
+            return response;
+        }
+
+        public async Task GetData()
+        {
+            Console.WriteLine("Getting rates");
             Rates.Clear();
             foreach (var brocker in Brockers)
             {
-                Rates.Add(brocker.GetRate());
+                var rate = brocker.GetRate();
+                Rates.Add(rate);
+                Console.WriteLine($"{rate.Brocker} {rate.AcquiredAt} {rate.Rate}");
             }
         }
 
@@ -34,14 +50,30 @@ namespace CryptoWinformsTestApp.Models
             }
         }
 
-        public async void GetSymbols()
+        public async Task<string> GetSymbols()
         {
+            Console.WriteLine("Getting symbols");
+            string response = "";
             AvailableSymbols.Clear();
             foreach (var brocker in Brockers)
             {
-                AvailableSymbols.AddRange(await brocker.GetAvailableSymbols());
+                try
+                {
+                    var symb = await brocker.GetAvailableSymbols();
+                    AvailableSymbols.AddRange(symb);
+                    foreach (var symbol in symb)
+                        Console.WriteLine(symbol);
+                }
+                catch (OperationCanceledException ex)
+                {
+                    response += $"Error: {ex.Message}";
+                }
             }
+            Console.WriteLine("Finished");
             AvailableSymbols = AvailableSymbols.Distinct().ToList();
+            if (string.IsNullOrEmpty(response))
+                response = "Success";
+            return response;
         }
     }
 }
