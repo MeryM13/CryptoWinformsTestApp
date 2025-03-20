@@ -1,4 +1,5 @@
 ﻿using CryptoExchange.Net.Clients;
+using CryptoExchange.Net.Interfaces;
 using CryptoExchange.Net.Objects.Sockets;
 using CryptoExchange.Net.SharedApis;
 using CryptoWinformsTestApp.Interfaces;
@@ -11,20 +12,23 @@ using System.Threading.Tasks;
 
 namespace CryptoWinformsTestApp.Services
 {
-    internal abstract class BaseBrockerService<TClient> : IBrockerService
-        where TClient : BaseSocketClient
+    internal abstract class BaseBrockerService<TSocketClient, TRestClient> : IBrockerService
+        where TSocketClient : BaseSocketClient
+        where TRestClient : BaseRestClient
     {
-        public TClient Client;
         public ITickerSocketClient SharedClient;
+        public TSocketClient SocketClient;
+        public TRestClient RestClient;
 
         bool _connectionOpen;
         SharedSymbol _sharedSymbol;
         CryptoData CryptoData;
         CancellationTokenSource _cancelTocken = new();
 
-        public BaseBrockerService(TClient client)
+        public BaseBrockerService(TSocketClient socketClient, TRestClient restClient)
         {
-            Client = client;
+            SocketClient = socketClient;
+            RestClient = restClient;
             GetSharedClient();
             OpenConnection();
         }
@@ -45,6 +49,7 @@ namespace CryptoWinformsTestApp.Services
                         Rate = update.Data.LastPrice ?? -1,
                         AcquiredAt = update.ReceiveTime
                     };
+                    Thread.Sleep(1000);
                 }, _cancelTocken.Token);
 
                 if (!result.Success)

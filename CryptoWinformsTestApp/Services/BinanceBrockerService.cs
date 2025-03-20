@@ -8,23 +8,22 @@ using System.Threading.Tasks;
 
 namespace CryptoWinformsTestApp.Services
 {
-    internal class BinanceBrockerService : BaseBrockerService<BinanceSocketClient>
+    internal class BinanceBrockerService : BaseBrockerService<BinanceSocketClient, BinanceRestClient>
     {
-        public BinanceBrockerService() : base(new BinanceSocketClient())
+        public BinanceBrockerService() : base(new BinanceSocketClient(), new BinanceRestClient())
         {
             
         }
 
         public override async Task<List<string>> GetAvailableSymbols()
         {
-            var restClient = new BinanceRestClient();
-            var exchangeInfo = await restClient.SpotApi.ExchangeData.GetExchangeInfoAsync();
+            var exchangeInfo = await RestClient.SpotApi.ExchangeData.GetExchangeInfoAsync();
             return exchangeInfo.Data.Symbols.Select(x => x.Name).ToList();
         }
 
         public override void GetSharedClient()
         {
-            SharedClient = Client.SpotApi.SharedClient;
+            SharedClient = SocketClient.SpotApi.SharedClient;
         }
     }
 }

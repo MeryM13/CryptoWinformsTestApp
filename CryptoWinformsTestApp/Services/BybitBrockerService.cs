@@ -8,23 +8,22 @@ using System.Threading.Tasks;
 
 namespace CryptoWinformsTestApp.Services
 {
-    internal class BybitBrockerService : BaseBrockerService<BybitSocketClient>
+    internal class BybitBrockerService : BaseBrockerService<BybitSocketClient, BybitRestClient>
     {
-        public BybitBrockerService() : base (new BybitSocketClient())
+        public BybitBrockerService() : base (new BybitSocketClient(), new BybitRestClient())
         {
             
         }
 
         public async override Task<List<string>> GetAvailableSymbols()
         {
-            var restClient = new BybitRestClient();
-            var exchangeInfo = await restClient.V5Api.ExchangeData.GetSpotSymbolsAsync();
+            var exchangeInfo = await RestClient.V5Api.ExchangeData.GetSpotSymbolsAsync();
             return exchangeInfo.Data.List.Select(x => x.Name).ToList();
         }
 
         public override void GetSharedClient()
         {
-            SharedClient = Client.V5SpotApi.SharedClient;
+            SharedClient = SocketClient.V5SpotApi.SharedClient;
         }
     }
 }
