@@ -28,12 +28,56 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Text = "Form1";
+            RatesDGrid = new DataGridView();
+            SymbolCmb = new ComboBox();
+            label1 = new Label();
+            ((System.ComponentModel.ISupportInitialize)RatesDGrid).BeginInit();
+            SuspendLayout();
+            // 
+            // RatesDGrid
+            // 
+            RatesDGrid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            RatesDGrid.Location = new Point(37, 118);
+            RatesDGrid.Name = "RatesDGrid";
+            RatesDGrid.Size = new Size(736, 307);
+            RatesDGrid.TabIndex = 0;
+            // 
+            // SymbolCmb
+            // 
+            SymbolCmb.FormattingEnabled = true;
+            SymbolCmb.Location = new Point(142, 31);
+            SymbolCmb.Name = "SymbolCmb";
+            SymbolCmb.Size = new Size(121, 23);
+            SymbolCmb.TabIndex = 1;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(37, 34);
+            label1.Name = "label1";
+            label1.Size = new Size(90, 15);
+            label1.TabIndex = 2;
+            label1.Text = "Выберите пару";
+            // 
+            // Form1
+            // 
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(800, 450);
+            Controls.Add(label1);
+            Controls.Add(SymbolCmb);
+            Controls.Add(RatesDGrid);
+            Name = "Form1";
+            Text = "Form1";
+            ((System.ComponentModel.ISupportInitialize)RatesDGrid).EndInit();
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
+
+        private DataGridView RatesDGrid;
+        private ComboBox SymbolCmb;
+        private Label label1;
     }
 }
