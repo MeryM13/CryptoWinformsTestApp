@@ -9,9 +9,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Interfaces\" />
-    <Folder Include="Presenters\" />
-    <Folder Include="Services\" />
+    <PackageReference Include="Binance.Net" Version="10.18.0" />
+    <PackageReference Include="Bybit.Net" Version="4.3.2" />
+    <PackageReference Include="CryptoExchange.Net" Version="8.8.0" />
+    <PackageReference Include="JK.Bitget.Net" Version="1.21.0" />
+    <PackageReference Include="Kucoin.Net" Version="6.0.2" />
   </ItemGroup>
 
 </Project>

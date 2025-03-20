@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CryptoWinformsTestApp.Models
 {
-    internal class CryptoData
+    public class CryptoData
     {
         public string Brocker { get; set; } = string.Empty;
         public string Symbol { get; set; } = "n/a";
