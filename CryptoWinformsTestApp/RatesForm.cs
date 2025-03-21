@@ -70,6 +70,7 @@ namespace CryptoWinformsTestApp
             set
             {
                 RatesDGrid.DataSource = value;
+                RatesDGrid.Columns[3].DefaultCellStyle.Format = "dd.MM.yyyy HH:mm:ss";
                 RatesDGrid.Refresh();
             }
         }
@@ -121,6 +122,11 @@ namespace CryptoWinformsTestApp
         {
             Console.WriteLine($"Quote asset changing to {QuoteAsset}");
             ChangeSymbol?.Invoke();
+        }
+
+        private void UpdateRatesBtn_Click(object sender, EventArgs e)
+        {
+            GetCurrentRates?.Invoke();
         }
     }
 }

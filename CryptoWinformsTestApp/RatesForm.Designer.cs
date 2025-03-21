@@ -35,30 +35,37 @@
             UpdateAvailableSymbolsBtn = new Button();
             RatesTimer = new System.Windows.Forms.Timer(components);
             QuoteAssetsCmb = new ComboBox();
+            UpdateRatesBtn = new Button();
             ((System.ComponentModel.ISupportInitialize)RatesDGrid).BeginInit();
             SuspendLayout();
             // 
             // RatesDGrid
             // 
+            RatesDGrid.AllowUserToAddRows = false;
+            RatesDGrid.AllowUserToDeleteRows = false;
+            RatesDGrid.AllowUserToOrderColumns = true;
+            RatesDGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             RatesDGrid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            RatesDGrid.Location = new Point(37, 118);
+            RatesDGrid.Location = new Point(12, 118);
             RatesDGrid.Name = "RatesDGrid";
-            RatesDGrid.Size = new Size(736, 307);
+            RatesDGrid.ReadOnly = true;
+            RatesDGrid.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
+            RatesDGrid.Size = new Size(442, 307);
             RatesDGrid.TabIndex = 0;
             // 
             // BaseAssetsCmb
             // 
             BaseAssetsCmb.FormattingEnabled = true;
-            BaseAssetsCmb.Location = new Point(225, 33);
+            BaseAssetsCmb.Location = new Point(225, 34);
             BaseAssetsCmb.Name = "BaseAssetsCmb";
-            BaseAssetsCmb.Size = new Size(121, 23);
+            BaseAssetsCmb.Size = new Size(187, 23);
             BaseAssetsCmb.TabIndex = 1;
             BaseAssetsCmb.SelectedIndexChanged += BaseAssetsCmb_SelectedIndexChanged;
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(240, 9);
+            label1.Location = new Point(272, 9);
             label1.Name = "label1";
             label1.Size = new Size(90, 15);
             label1.TabIndex = 2;
@@ -66,11 +73,11 @@
             // 
             // UpdateAvailableSymbolsBtn
             // 
-            UpdateAvailableSymbolsBtn.Location = new Point(82, 23);
+            UpdateAvailableSymbolsBtn.Location = new Point(53, 33);
             UpdateAvailableSymbolsBtn.Name = "UpdateAvailableSymbolsBtn";
-            UpdateAvailableSymbolsBtn.Size = new Size(75, 23);
+            UpdateAvailableSymbolsBtn.Size = new Size(137, 23);
             UpdateAvailableSymbolsBtn.TabIndex = 4;
-            UpdateAvailableSymbolsBtn.Text = "Load symbols";
+            UpdateAvailableSymbolsBtn.Text = "Загрузить символы";
             UpdateAvailableSymbolsBtn.UseVisualStyleBackColor = true;
             UpdateAvailableSymbolsBtn.Click += UpdateAvailableSymbolsBtn_Click;
             // 
@@ -82,24 +89,36 @@
             // QuoteAssetsCmb
             // 
             QuoteAssetsCmb.FormattingEnabled = true;
-            QuoteAssetsCmb.Location = new Point(225, 62);
+            QuoteAssetsCmb.Location = new Point(225, 72);
             QuoteAssetsCmb.Name = "QuoteAssetsCmb";
-            QuoteAssetsCmb.Size = new Size(121, 23);
+            QuoteAssetsCmb.Size = new Size(187, 23);
             QuoteAssetsCmb.TabIndex = 5;
             QuoteAssetsCmb.SelectedIndexChanged += QuoteAssetsCmb_SelectedIndexChanged;
+            // 
+            // UpdateRatesBtn
+            // 
+            UpdateRatesBtn.AutoSize = true;
+            UpdateRatesBtn.Location = new Point(54, 70);
+            UpdateRatesBtn.Name = "UpdateRatesBtn";
+            UpdateRatesBtn.Size = new Size(136, 25);
+            UpdateRatesBtn.TabIndex = 6;
+            UpdateRatesBtn.Text = "Обновить данные";
+            UpdateRatesBtn.UseVisualStyleBackColor = true;
+            UpdateRatesBtn.Click += UpdateRatesBtn_Click;
             // 
             // RatesForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(470, 450);
+            Controls.Add(UpdateRatesBtn);
             Controls.Add(QuoteAssetsCmb);
             Controls.Add(UpdateAvailableSymbolsBtn);
             Controls.Add(label1);
             Controls.Add(BaseAssetsCmb);
             Controls.Add(RatesDGrid);
             Name = "RatesForm";
-            Text = "Form1";
+            Text = "Курсы криптовалют";
             ((System.ComponentModel.ISupportInitialize)RatesDGrid).EndInit();
             ResumeLayout(false);
             PerformLayout();
@@ -113,5 +132,6 @@
         private Button UpdateAvailableSymbolsBtn;
         private System.Windows.Forms.Timer RatesTimer;
         private ComboBox QuoteAssetsCmb;
+        private Button UpdateRatesBtn;
     }
 }
