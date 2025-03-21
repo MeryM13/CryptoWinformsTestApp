@@ -10,16 +10,16 @@ namespace CryptoWinformsTestApp.Models
 {
     internal class RatesModel
     {
-        public List<IBrockerService> Brockers {get; set; } = new();
-        public List<string> AvailableAssets { get; set; } = new();
-        public List<CryptoData> Rates { get; set; } = new();
+        public List<IBrockerService> Brockers { get; set; } = [];
+        public List<string> AvailableAssets { get; set; } = [];
+        public List<CryptoData> Rates { get; set; } = [];
 
         public async Task<string> ActivateBrockers()
         {
             string response = "";
             foreach (var brocker in Brockers)
             {
-                brocker.OpenConnection();
+                await brocker.OpenConnection();
             }
             if (string.IsNullOrEmpty(response))
                 response = "Success";
@@ -68,7 +68,7 @@ namespace CryptoWinformsTestApp.Models
                 }
             }
             Console.WriteLine("Finished");
-            AvailableAssets = AvailableAssets.Distinct().Order().ToList();
+            AvailableAssets = [.. AvailableAssets.Distinct().Order()];
             if (string.IsNullOrEmpty(response))
                 response = "Success";
             return response;

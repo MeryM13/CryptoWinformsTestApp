@@ -16,7 +16,8 @@ namespace CryptoWinformsTestApp.Interfaces.RatesForm
         List<string> AvailableQuoteAssets { set; }
         List<CryptoData> Rates { set; }
         void LoadInitialData();
-        void ResetTimer();
+        void StopTimer();
+        void StartTimer();
 
         public event Action GetAvailableAssets;
         public event Action ChangeSymbol;

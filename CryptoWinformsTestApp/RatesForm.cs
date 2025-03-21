@@ -98,11 +98,16 @@ namespace CryptoWinformsTestApp
             GetAvailableAssets?.Invoke();
             BaseAssetsCmb.SelectedItem = "BTC";
             QuoteAssetsCmb.SelectedItem = "USDT";
+            ChangeSymbol?.Invoke();
         }
 
-        public void ResetTimer()
+        public void StopTimer()
         {
             RatesTimer.Stop();
+        }
+
+        public void StartTimer()
+        {
             RatesTimer.Start();
         }
 
