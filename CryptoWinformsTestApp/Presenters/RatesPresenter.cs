@@ -31,7 +31,8 @@ namespace CryptoWinformsTestApp.Presenters
             {
                 View.AvailableBaseAssets = _model.AvailableAssets;
                 View.AvailableQuoteAssets = _model.AvailableAssets;
-                await OnChangeSymbol("BTC", "USDT");
+
+                await OnChangeSymbol(Options.DefaultSymbol.BaseAsset, Options.DefaultSymbol.QuoteAsset);
             }
             else
             {
@@ -43,6 +44,7 @@ namespace CryptoWinformsTestApp.Presenters
         async Task OnGetCurrentRates()
         {
             await _model.GetData();
+
             View.Rates = _model.Rates;
         }
 
@@ -50,10 +52,15 @@ namespace CryptoWinformsTestApp.Presenters
         {
             if (!string.IsNullOrEmpty(baseAsset) && !string.IsNullOrEmpty(quoteAsset))
             {
-                Console.WriteLine($"Presenter: changing symbol to {View.BaseAsset}-{View.QuoteAsset}");
+                if (Options.DebugMode)
+                    Console.WriteLine($"Presenter: changing symbol to {View.BaseAsset}-{View.QuoteAsset}");
+
                 View.StopTimer();
+
                 await _model.ChangeSymbol(baseAsset, quoteAsset);
+
                 View.StartTimer();
+
                 await OnGetCurrentRates();
             }
         }

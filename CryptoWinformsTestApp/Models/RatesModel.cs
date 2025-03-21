@@ -14,34 +14,35 @@ namespace CryptoWinformsTestApp.Models
         public List<string> AvailableAssets { get; set; } = [];
         public List<CryptoData> Rates { get; set; } = [];
 
-        public async Task<string> ActivateBrockers()
+        public async Task ActivateBrockers()
         {
-            string response = "";
             foreach (var brocker in Brockers)
             {
                 await brocker.OpenConnection();
             }
-            if (string.IsNullOrEmpty(response))
-                response = "Success";
-            Console.WriteLine(response);
-            return response;
         }
 
         public async Task GetData()
         {
-            Console.WriteLine("Getting rates");
+            if (Options.DebugMode)
+                Console.WriteLine("Getting rates");
+
             Rates.Clear();
             foreach (var brocker in Brockers)
             {
                 var rate = brocker.GetRate();
                 Rates.Add(rate);
-                Console.WriteLine($"{rate.Brocker} {rate.Symbol} {rate.AcquiredAt} {rate.Rate}");
+
+                if (Options.DebugMode)
+                    Console.WriteLine($"{rate.Brocker} {rate.Symbol} {rate.AcquiredAt} {rate.Rate}");
             }
         }
 
         public async Task ChangeSymbol(string baseAsset, string quoteAsset)
         {
-            Console.WriteLine($"Model: changing symbol to {baseAsset}-{quoteAsset}");
+            if (Options.DebugMode)
+                Console.WriteLine($"Model: changing symbol to {baseAsset}-{quoteAsset}");
+
             foreach (var brocker in Brockers)
             {
                 await brocker.ChangeSymbol(baseAsset, quoteAsset);
@@ -50,8 +51,11 @@ namespace CryptoWinformsTestApp.Models
 
         public async Task<string> GetAssets()
         {
-            Console.WriteLine("Getting symbols");
+            if (Options.DebugMode)
+                Console.WriteLine("Getting symbols");
+
             string response = "";
+
             AvailableAssets.Clear();
             foreach (var brocker in Brockers)
             {
@@ -59,18 +63,24 @@ namespace CryptoWinformsTestApp.Models
                 {
                     var symb = await brocker.GetAvailableAssets();
                     AvailableAssets.AddRange(symb);
-                    foreach (var symbol in symb)
-                        Console.WriteLine(symbol);
+
+                    if (Options.DebugMode)
+                        foreach (var symbol in symb)
+                            Console.WriteLine(symbol);
                 }
                 catch (OperationCanceledException ex)
                 {
                     response += $"Error: {ex.Message}";
                 }
             }
-            Console.WriteLine("Finished");
+            if (Options.DebugMode)
+                Console.WriteLine("Finished");
+
             AvailableAssets = [.. AvailableAssets.Distinct().Order()];
+
             if (string.IsNullOrEmpty(response))
                 response = "Success";
+
             return response;
         }
     }

@@ -43,7 +43,8 @@ namespace CryptoWinformsTestApp.Services
         {
             if (!_connectionOpen)
             {
-                Console.WriteLine($"{SocketClient.Exchange} service: Opening connection");
+                if (Options.DebugMode)
+                    Console.WriteLine($"{SocketClient.Exchange} service: Opening connection");
 
                 CryptoData = new()
                 {
@@ -66,13 +67,16 @@ namespace CryptoWinformsTestApp.Services
                     Thread.Sleep(1000);
                 }, _cancelTocken.Token);
 
+
                 if (!result.Success)
                 {
-                    Console.WriteLine($"{SocketClient.Exchange} service: Connection failed, Error message: {result.Error}");
+                    if (Options.DebugMode)
+                        Console.WriteLine($"{SocketClient.Exchange} service: Connection failed, Error message: {result.Error}");
                 }
                 else
                 {
-                    Console.WriteLine($"{SocketClient.Exchange} service: Connection succesful, getting rates for: {_sharedSymbol.BaseAsset}-{_sharedSymbol.QuoteAsset}");
+                    if (Options.DebugMode)
+                        Console.WriteLine($"{SocketClient.Exchange} service: Connection succesful, getting rates for: {_sharedSymbol.BaseAsset}-{_sharedSymbol.QuoteAsset}");
                 }
             }
         }
@@ -81,7 +85,9 @@ namespace CryptoWinformsTestApp.Services
         {
             if (_connectionOpen)
             {
-                Console.WriteLine($"{SocketClient.Exchange} service: Shuting down connection");
+                if (Options.DebugMode)
+                    Console.WriteLine($"{SocketClient.Exchange} service: Shuting down connection");
+
                 _cancelTocken.Cancel();
                 _cancelTocken = new();
                 _connectionOpen = false;
@@ -95,11 +101,16 @@ namespace CryptoWinformsTestApp.Services
 
         public async Task ChangeSymbol(string baseAsset, string quoteAsset)
         {
-            Console.WriteLine($"{SocketClient.Exchange} service: changing symbol to {baseAsset}-{quoteAsset}");
+            if (Options.DebugMode)
+                Console.WriteLine($"{SocketClient.Exchange} service: changing symbol to {baseAsset}-{quoteAsset}");
+
             if (_sharedSymbol?.BaseAsset != baseAsset || _sharedSymbol?.QuoteAsset != quoteAsset)
             {
-                Console.WriteLine("Initiating change");
+                if (Options.DebugMode)
+                    Console.WriteLine("Initiating change");
+
                 _sharedSymbol = new SharedSymbol(TradingMode.Spot, baseAsset, quoteAsset);
+
                 await CloseConnection();
                 await OpenConnection();
             }

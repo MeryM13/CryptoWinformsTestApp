@@ -12,6 +12,9 @@ namespace CryptoWinformsTestApp
         [STAThread]
         static void Main()
         {
+            //uncomment to enable console outputs
+            //Options.DebugMode = true;
+
             List<IBrockerService> brockers = 
                 [
                 new BinanceBrockerService(),

@@ -97,9 +97,13 @@ namespace CryptoWinformsTestApp
         public void LoadInitialData()
         {
             GetAvailableAssets?.Invoke();
-            BaseAssetsCmb.SelectedItem = "BTC";
-            QuoteAssetsCmb.SelectedItem = "USDT";
+
+            BaseAssetsCmb.SelectedItem = Options.DefaultSymbol.BaseAsset;
+            QuoteAssetsCmb.SelectedItem = Options.DefaultSymbol.QuoteAsset;
+
             ChangeSymbol?.Invoke();
+
+            RatesTimer.Interval = Options.DefaultTimerDelay * 1000;
         }
 
         public void StopTimer()
@@ -114,13 +118,17 @@ namespace CryptoWinformsTestApp
 
         private void BaseAssetsCmb_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Console.WriteLine($"Base asset changing to {BaseAsset}");
+            if (Options.DebugMode)
+                Console.WriteLine($"Base asset changing to {BaseAsset}");
+
             ChangeSymbol?.Invoke();
         }
 
         private void QuoteAssetsCmb_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Console.WriteLine($"Quote asset changing to {QuoteAsset}");
+            if (Options.DebugMode)
+                Console.WriteLine($"Quote asset changing to {QuoteAsset}");
+
             ChangeSymbol?.Invoke();
         }
 
