@@ -1,5 +1,6 @@
 ﻿using CryptoExchange.Net.Clients;
 using CryptoExchange.Net.Interfaces;
+using CryptoExchange.Net.Objects;
 using CryptoExchange.Net.Objects.Sockets;
 using CryptoExchange.Net.SharedApis;
 using CryptoWinformsTestApp.Interfaces;
@@ -20,28 +21,42 @@ namespace CryptoWinformsTestApp.Services
         public TSocketClient SocketClient;
         public TRestClient RestClient;
 
-        bool _connectionOpen;
-        SharedSymbol _sharedSymbol = new SharedSymbol(TradingMode.Spot, "BTC", "USDT");
-        CryptoData CryptoData;
+        bool _connectionOpen = false;
+        SharedSymbol _sharedSymbol;
+        CryptoData CryptoData = new();
         CancellationTokenSource _cancelTocken = new();
 
         public BaseBrockerService(TSocketClient socketClient, TRestClient restClient)
         {
             SocketClient = socketClient;
+            SocketClient.ClientOptions.RequestTimeout = TimeSpan.FromSeconds(3);
+            SocketClient.ClientOptions.RateLimiterEnabled = true;
+            SocketClient.ClientOptions.RateLimitingBehaviour = RateLimitingBehaviour.Wait;
+
             RestClient = restClient;
             GetSharedClient();
         }
 
         public abstract void GetSharedClient();
 
-        public async void OpenConnection()
+        public async Task OpenConnection()
         {
             if (!_connectionOpen)
             {
+                Console.WriteLine($"{SocketClient.Exchange} service: Opening connection");
+
+                CryptoData = new()
+                {
+                    Brocker = SharedClient.Exchange,
+                    Symbol = "not found",
+                    Rate = -1,
+                    AcquiredAt = DateTime.MinValue
+                };
+
                 _connectionOpen = true;
                 var result = await SharedClient.SubscribeToTickerUpdatesAsync(new SubscribeTickerRequest(_sharedSymbol), update =>
                 {
-                    CryptoData = new CryptoData()
+                    CryptoData = new()
                     {
                         Brocker = SharedClient.Exchange,
                         Symbol = update.Data.Symbol,
@@ -52,22 +67,24 @@ namespace CryptoWinformsTestApp.Services
                 }, _cancelTocken.Token);
 
                 if (!result.Success)
-                    CryptoData = new()
-                    {
-                        Brocker = SharedClient.Exchange,
-                        Symbol = "not found",
-                        Rate = -1,
-                        AcquiredAt = DateTime.MinValue
-                    };
+                {
+                    Console.WriteLine($"{SocketClient.Exchange} service: Connection failed, Error message: {result.Error}");
+                }
+                else
+                {
+                    Console.WriteLine($"{SocketClient.Exchange} service: Connection succesful, getting rates for: {_sharedSymbol.BaseAsset}-{_sharedSymbol.QuoteAsset}");
+                }
             }
         }
 
-        public void CloseConnection()
+        public async Task CloseConnection()
         {
             if (_connectionOpen)
             {
+                Console.WriteLine($"{SocketClient.Exchange} service: Shuting down connection");
                 _cancelTocken.Cancel();
                 _cancelTocken = new();
+                _connectionOpen = false;
             }
         }
 
@@ -76,14 +93,15 @@ namespace CryptoWinformsTestApp.Services
             return _connectionOpen;
         }
 
-        public void ChangeSymbol(string baseAsset, string quoteAsset)
+        public async Task ChangeSymbol(string baseAsset, string quoteAsset)
         {
-            var newSymbol = new SharedSymbol(TradingMode.Spot, baseAsset, quoteAsset);
-            if (_sharedSymbol != newSymbol)
+            Console.WriteLine($"{SocketClient.Exchange} service: changing symbol to {baseAsset}-{quoteAsset}");
+            if (_sharedSymbol?.BaseAsset != baseAsset || _sharedSymbol?.QuoteAsset != quoteAsset)
             {
-                _sharedSymbol = newSymbol;
-                CloseConnection();
-                OpenConnection();
+                Console.WriteLine("Initiating change");
+                _sharedSymbol = new SharedSymbol(TradingMode.Spot, baseAsset, quoteAsset);
+                await CloseConnection();
+                await OpenConnection();
             }
         }
 

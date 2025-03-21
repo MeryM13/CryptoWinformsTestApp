@@ -30,10 +30,11 @@
         {
             components = new System.ComponentModel.Container();
             RatesDGrid = new DataGridView();
-            SymbolCmb = new ComboBox();
+            BaseAssetsCmb = new ComboBox();
             label1 = new Label();
             UpdateAvailableSymbolsBtn = new Button();
             RatesTimer = new System.Windows.Forms.Timer(components);
+            QuoteAssetsCmb = new ComboBox();
             ((System.ComponentModel.ISupportInitialize)RatesDGrid).BeginInit();
             SuspendLayout();
             // 
@@ -45,19 +46,19 @@
             RatesDGrid.Size = new Size(736, 307);
             RatesDGrid.TabIndex = 0;
             // 
-            // SymbolCmb
+            // BaseAssetsCmb
             // 
-            SymbolCmb.FormattingEnabled = true;
-            SymbolCmb.Location = new Point(143, 38);
-            SymbolCmb.Name = "SymbolCmb";
-            SymbolCmb.Size = new Size(121, 23);
-            SymbolCmb.TabIndex = 1;
-            SymbolCmb.SelectedIndexChanged += SymbolCmb_SelectedIndexChanged;
+            BaseAssetsCmb.FormattingEnabled = true;
+            BaseAssetsCmb.Location = new Point(225, 33);
+            BaseAssetsCmb.Name = "BaseAssetsCmb";
+            BaseAssetsCmb.Size = new Size(121, 23);
+            BaseAssetsCmb.TabIndex = 1;
+            BaseAssetsCmb.SelectedIndexChanged += BaseAssetsCmb_SelectedIndexChanged;
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(38, 41);
+            label1.Location = new Point(240, 9);
             label1.Name = "label1";
             label1.Size = new Size(90, 15);
             label1.TabIndex = 2;
@@ -65,7 +66,7 @@
             // 
             // UpdateAvailableSymbolsBtn
             // 
-            UpdateAvailableSymbolsBtn.Location = new Point(300, 38);
+            UpdateAvailableSymbolsBtn.Location = new Point(82, 23);
             UpdateAvailableSymbolsBtn.Name = "UpdateAvailableSymbolsBtn";
             UpdateAvailableSymbolsBtn.Size = new Size(75, 23);
             UpdateAvailableSymbolsBtn.TabIndex = 4;
@@ -75,18 +76,27 @@
             // 
             // RatesTimer
             // 
-            RatesTimer.Enabled = true;
             RatesTimer.Interval = 5000;
             RatesTimer.Tick += RatesTimer_Tick;
+            // 
+            // QuoteAssetsCmb
+            // 
+            QuoteAssetsCmb.FormattingEnabled = true;
+            QuoteAssetsCmb.Location = new Point(225, 62);
+            QuoteAssetsCmb.Name = "QuoteAssetsCmb";
+            QuoteAssetsCmb.Size = new Size(121, 23);
+            QuoteAssetsCmb.TabIndex = 5;
+            QuoteAssetsCmb.SelectedIndexChanged += QuoteAssetsCmb_SelectedIndexChanged;
             // 
             // RatesForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(QuoteAssetsCmb);
             Controls.Add(UpdateAvailableSymbolsBtn);
             Controls.Add(label1);
-            Controls.Add(SymbolCmb);
+            Controls.Add(BaseAssetsCmb);
             Controls.Add(RatesDGrid);
             Name = "RatesForm";
             Text = "Form1";
@@ -98,9 +108,10 @@
         #endregion
 
         private DataGridView RatesDGrid;
-        private ComboBox SymbolCmb;
+        private ComboBox BaseAssetsCmb;
         private Label label1;
         private Button UpdateAvailableSymbolsBtn;
         private System.Windows.Forms.Timer RatesTimer;
+        private ComboBox QuoteAssetsCmb;
     }
 }

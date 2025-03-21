@@ -8,9 +8,9 @@ namespace CryptoWinformsTestApp.Models
 {
     public class CryptoData
     {
-        public string Brocker { get; set; } = string.Empty;
+        public string Brocker { get; set; } = "n/a";
         public string Symbol { get; set; } = "n/a";
         public decimal Rate { get; set; } = 0;
-        public DateTime AcquiredAt { get; set; } = DateTime.Now;
+        public DateTime AcquiredAt { get; set; } = DateTime.MinValue;
     }
 }

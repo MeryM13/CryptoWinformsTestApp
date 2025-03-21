@@ -11,28 +11,57 @@ namespace CryptoWinformsTestApp
             InitializeComponent();
         }
 
-        public string Symbol
+        public string BaseAsset
         {
-            get => SymbolCmb.SelectedItem.ToString();
+            get => BaseAssetsCmb.SelectedItem?.ToString() ?? "";
             set
             {
                 try
                 {
-                    SymbolCmb.SelectedItem = value;
+                    BaseAssetsCmb.SelectedItem = value;
+                    QuoteAssetsCmb.Items.Remove(BaseAsset);
                 }
                 catch { }
             }
         }
 
-        public List<string> AvailableSymbols
+        public List<string> AvailableBaseAssets
         {
             set
             {
-                SymbolCmb.Items.Clear();
-                foreach (string symbol in value)
+                BaseAssetsCmb.Items.Clear();
+                foreach (string asset in value)
                 {
-                    SymbolCmb.Items.Add(symbol);
+                    BaseAssetsCmb.Items.Add(asset);
                 }
+                BaseAssetsCmb.Items.Remove(QuoteAsset);
+            }
+        }
+
+        public string QuoteAsset
+        {
+            get => QuoteAssetsCmb.SelectedItem?.ToString() ?? "";
+            set
+            {
+                try
+                {
+                    QuoteAssetsCmb.SelectedItem = value;
+                    BaseAssetsCmb.Items.Remove(QuoteAsset);
+                }
+                catch { }
+            }
+        }
+
+        public List<string> AvailableQuoteAssets
+        {
+            set
+            {
+                QuoteAssetsCmb.Items.Clear();
+                foreach (string asset in value)
+                {
+                    QuoteAssetsCmb.Items.Add(asset);
+                }
+                QuoteAssetsCmb.Items.Remove(BaseAsset);
             }
         }
 
@@ -45,9 +74,9 @@ namespace CryptoWinformsTestApp
             }
         }
 
-        public event Action SetAvailableSymbols;
+        public event Action GetAvailableAssets;
         public event Action ChangeSymbol;
-        public event Action SetRates;
+        public event Action GetCurrentRates;
 
         public void ShowError(string ErrorMessage)
         {
@@ -56,24 +85,37 @@ namespace CryptoWinformsTestApp
 
         private void UpdateAvailableSymbolsBtn_Click(object sender, EventArgs e)
         {
-            SetAvailableSymbols?.Invoke();
-            SymbolCmb.SelectedIndex = 1;
-        }
-
-        private void SymbolCmb_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            ChangeSymbol?.Invoke();
-            SetRates?.Invoke();
+            GetAvailableAssets?.Invoke();
         }
 
         private void RatesTimer_Tick(object sender, EventArgs e)
         {
-            SetRates?.Invoke();
+            GetCurrentRates?.Invoke();
         }
 
         public void LoadInitialData()
         {
-            SetAvailableSymbols?.Invoke();
+            GetAvailableAssets?.Invoke();
+            BaseAssetsCmb.SelectedItem = "BTC";
+            QuoteAssetsCmb.SelectedItem = "USDT";
+        }
+
+        public void ResetTimer()
+        {
+            RatesTimer.Stop();
+            RatesTimer.Start();
+        }
+
+        private void BaseAssetsCmb_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Console.WriteLine($"Base asset changing to {BaseAsset}");
+            ChangeSymbol?.Invoke();
+        }
+
+        private void QuoteAssetsCmb_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Console.WriteLine($"Quote asset changing to {QuoteAsset}");
+            ChangeSymbol?.Invoke();
         }
     }
 }

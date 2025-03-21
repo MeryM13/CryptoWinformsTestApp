@@ -11,9 +11,7 @@ namespace CryptoWinformsTestApp.Models
     internal class RatesModel
     {
         public List<IBrockerService> Brockers {get; set; } = new();
-        public List<string> AvailableSymbols { get; set; } = new();
-        public string AssetFrom { get; set; } = "BTC";
-        public string AssetTo { get; set; } = "USDT";
+        public List<string> AvailableAssets { get; set; } = new();
         public List<CryptoData> Rates { get; set; } = new();
 
         public async Task<string> ActivateBrockers()
@@ -37,30 +35,30 @@ namespace CryptoWinformsTestApp.Models
             {
                 var rate = brocker.GetRate();
                 Rates.Add(rate);
-                Console.WriteLine($"{rate.Brocker} {rate.AcquiredAt} {rate.Rate}");
+                Console.WriteLine($"{rate.Brocker} {rate.Symbol} {rate.AcquiredAt} {rate.Rate}");
             }
         }
 
-        public void ChangeSymbol()
+        public async Task ChangeSymbol(string baseAsset, string quoteAsset)
         {
-            var newSymbol = new SharedSymbol(TradingMode.Spot, AssetFrom, AssetTo);
+            Console.WriteLine($"Model: changing symbol to {baseAsset}-{quoteAsset}");
             foreach (var brocker in Brockers)
             {
-                brocker.ChangeSymbol(newSymbol);
+                await brocker.ChangeSymbol(baseAsset, quoteAsset);
             }
         }
 
-        public async Task<string> GetSymbols()
+        public async Task<string> GetAssets()
         {
             Console.WriteLine("Getting symbols");
             string response = "";
-            AvailableSymbols.Clear();
+            AvailableAssets.Clear();
             foreach (var brocker in Brockers)
             {
                 try
                 {
-                    var symb = await brocker.GetAvailableSymbols();
-                    AvailableSymbols.AddRange(symb);
+                    var symb = await brocker.GetAvailableAssets();
+                    AvailableAssets.AddRange(symb);
                     foreach (var symbol in symb)
                         Console.WriteLine(symbol);
                 }
@@ -70,7 +68,7 @@ namespace CryptoWinformsTestApp.Models
                 }
             }
             Console.WriteLine("Finished");
-            AvailableSymbols = AvailableSymbols.Distinct().ToList();
+            AvailableAssets = AvailableAssets.Distinct().Order().ToList();
             if (string.IsNullOrEmpty(response))
                 response = "Success";
             return response;

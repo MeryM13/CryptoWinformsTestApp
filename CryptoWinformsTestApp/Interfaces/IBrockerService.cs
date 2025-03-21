@@ -10,10 +10,10 @@ namespace CryptoWinformsTestApp.Interfaces
 {
     internal interface IBrockerService
     {
-        void OpenConnection();
+        Task OpenConnection();
         bool CoonectionOpen();
-        void CloseConnection();
-        void ChangeSymbol(string baseAsset, string quoteAsset);
+        Task CloseConnection();
+        Task ChangeSymbol(string baseAsset, string quoteAsset);
         CryptoData GetRate();
         Task<List<string>> GetAvailableAssets();
     }
